@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin xmlns="http://www.urbancode.com/PluginXMLSchema_v1" xmlns:server="http://www.urbancode.com/PluginServerXMLSchema_v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <header>
+    <identifier id="com.pacgenesis.urbancode.fileutils" name="File Utils - Extended" version="1"/>
+    <description>
+      Additional file utilities 
+	  </description>
+    <tag>Utilities/FileUtils</tag>
+  </header>
+  <step-type name="File Exists">
+    <description>Checks if a file or set of files exists on the file system.</description>
+    <properties>
+      <property name="dirOffset">
+        <property-ui description="The directory offset relative to the current working directory where the step should run." label="Directory Offset" type="textBox"/>
+      </property>
+      <property name="fileNames" required="true">
+        <property-ui description="New line separated list of files to check for existence" label="File Names" type="textAreaBox"/>
+      </property>
+    </properties>
+    <!-- This is the standard post processing script. It sets the step to Success if the exit code
+    of the process was 0. Otherwise, the step fails. In order for a step to run correctly, it must
+    have a post processing script and that post processing script must set the status property
+    based off of the exit code. -->
+    <post-processing><![CDATA[
+        if (properties.get("exitCode") != 0) {
+            properties.put(new java.lang.String("Status"), new java.lang.String("Failure"));
+        }
+        else {
+            properties.put("Status", "Success");
+        }
+     ]]></post-processing>
+    <!--The syntax of the command element is such that each argument goes on its own line.  
+    The arg attribute can be "value", "path", or "file". So this command will be:
+    ${GROOVY_HOME}/bin/groovy -cp src cmd.groovy ${PLUGIN_INPUT_PROPS} ${PLUGIN_OUTPUT_PROPS} -->
+    <command program="${GROOVY_HOME}/bin/groovy">
+      <arg value="-cp"/>
+      <arg path="java/PacGenesis_FileUtils.jar:lib/gson-2.2.4.jar"/>
+      <arg file="FileExists.groovy"/>
+      <arg file="${PLUGIN_INPUT_PROPS}"/>
+      <arg file="${PLUGIN_OUTPUT_PROPS}"/>
+    </command>
+  </step-type>
+</plugin>
