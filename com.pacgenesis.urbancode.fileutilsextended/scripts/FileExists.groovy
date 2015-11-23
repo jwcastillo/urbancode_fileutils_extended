@@ -1,7 +1,3 @@
-/* This is an example step groovy to show the proper use of APTool
- * In order to use import these utilities, you have to use the "pluginutilscripts" jar
- * that comes bundled with this plugin example. 
- */
 import com.urbancode.air.AirPluginTool;
 import com.urbancode.air.CommandHelper;
 
